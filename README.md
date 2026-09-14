@@ -1,4 +1,4 @@
-# 🔬 LabSchedule (AgendaEventos v2)
+# 🔬 LabSchedule
 
 O **LabSchedule** é um sistema web moderno, responsivo e intuitivo para gestão e agendamento de laboratórios institucionais/acadêmicos. O sistema atende tanto ao público geral (professores/alunos) para solicitação e consulta de reservas, quanto aos administradores e equipe técnica para controle de solicitações, gestão de laboratórios e geração de relatórios.
 
