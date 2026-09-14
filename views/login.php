@@ -118,13 +118,6 @@ if (isset($_GET['error']) && $_GET['error'] === 'invalid') {
             </button>
         </form>
         
-        <div class="login-info">
-            <strong>Dica de Acesso (Teste):</strong>
-            <p>Admin: <code>admin</code> / Senha: <code>123</code></p>
-            <p>Saúde: <code>saude</code> / Senha: <code>123</code></p>
-            <p>Engenharia: <code>eng</code> / Senha: <code>123</code></p>
-        </div>
-        
         <div style="margin-top: 1.5rem;">
             <a href="../index.php" style="color: var(--primary-color); font-size: 0.85rem; text-decoration: none;">
                 <i class="fa-solid fa-arrow-left"></i> Voltar para página inicial

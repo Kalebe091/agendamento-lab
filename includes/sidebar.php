@@ -8,7 +8,9 @@ if (isset($db)) { // Se a conexão $db já existe no arquivo que incluiu o sideb
     if ($role === 'tech_saude') {
         $schedules_filter_sql = "AND lab_id IN (SELECT id FROM laboratories WHERE type = 'saude')";
     } elseif ($role === 'tech_eng') {
-        $schedules_filter_sql = "AND lab_id IN (SELECT id FROM laboratories WHERE type IN ('engenharia', 'informatica'))";
+        $schedules_filter_sql = "AND lab_id IN (SELECT id FROM laboratories WHERE type = 'engenharia')";
+    } elseif ($role === 'tech_info') {
+        $schedules_filter_sql = "AND lab_id IN (SELECT id FROM laboratories WHERE type = 'informatica')";
     }
 
     $stmt_pending = $db->query("SELECT COUNT(*) FROM schedules WHERE status = 'pending' $schedules_filter_sql");

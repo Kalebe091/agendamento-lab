@@ -226,19 +226,32 @@ window.showEventDetails = function(eventObj, arg2, arg3, arg4, arg5) {
     
     const body = document.getElementById('details-modal-body');
 
+    const isAdmin = eventObj.isAdmin || window.CURRENT_USER_ROLE === 'admin';
+    let actionsHTML = '';
+    if (eventObj.id && isAdmin) {
+        const safeTitle = (eventObj.title || '').replace(/'/g, "\\'");
+        actionsHTML = `
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); display: flex; gap: 0.75rem; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="openEditEventModal(${eventObj.id}, '${eventObj.rawStart || ''}', '${eventObj.rawEnd || ''}', '${eventObj.labId || ''}', '${safeTitle}')" style="padding: 0.5rem 1rem; font-size: 0.85rem;"><i class="fa-solid fa-pen-to-square"></i> Editar</button>
+                <button class="btn btn-reject" onclick="deleteEvent(${eventObj.id})" style="padding: 0.5rem 1rem; font-size: 0.85rem;"><i class="fa-solid fa-trash"></i> Excluir</button>
+            </div>
+        `;
+    }
+
     body.innerHTML = `
-        <div style="margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
-            <strong><i class="fa-solid fa-book"></i> Disciplina:</strong> <span style="color: var(--text-primary);">${eventObj.title}</span>
+        <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <strong><i class="fa-solid fa-book"></i> Disciplina:</strong> <span style="color: var(--text-main);">${eventObj.title}</span>
         </div>
-        <div style="margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
-            <strong><i class="fa-solid fa-user-tie"></i> Solicitante:</strong> <span style="color: var(--text-primary);">${eventObj.prof}</span>
+        <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <strong><i class="fa-solid fa-user-tie"></i> Solicitante:</strong> <span style="color: var(--text-main);">${eventObj.prof}</span>
         </div>
-        <div style="margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
-            <strong><i class="fa-regular fa-clock"></i> Horário:</strong> <span style="color: var(--text-primary);">${eventObj.startTimeStr} às ${eventObj.endTimeStr}</span>
+        <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+            <strong><i class="fa-regular fa-clock"></i> Horário:</strong> <span style="color: var(--text-main);">${eventObj.startTimeStr} às ${eventObj.endTimeStr}</span>
         </div>
-        <div>
-            <strong><i class="fa-solid fa-desktop"></i> Laboratório:</strong> <span style="color: var(--text-primary);">${eventObj.labName}</span>
+        <div style="margin-bottom: ${actionsHTML ? '0' : '0.5rem'};">
+            <strong><i class="fa-solid fa-desktop"></i> Laboratório:</strong> <span style="color: var(--text-main);">${eventObj.labName}</span>
         </div>
+        ${actionsHTML}
     `;
     
     modal.classList.add('active');

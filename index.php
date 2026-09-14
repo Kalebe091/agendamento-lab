@@ -87,13 +87,7 @@ if ($db) {
 
                 <!-- Calendar Grid -->
                 <div class="calendar-grid">
-                    <!-- Time Column -->
-                    <div class="time-col">
-                        <div class="time-header timezone-spacer">GMT-03</div>
-                        <div class="time-slots">
-                            <!-- JS will populate times like 08:00, 09:00 -->
-                        </div>
-                    </div>
+
                     
                     <!-- Days Columns -->
                     <div class="days-container" id="days-container">

@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 prof: dbEvent.requester_name,
                 lab: 'lab' + dbEvent.lab_id,
                 labId: dbEvent.lab_id,
+                labName: dbEvent.lab_name,
                 startDate: startDate,
                 endDate: endDate,
                 rawStart: dbEvent.start_time,
@@ -38,20 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const timeSlotsContainer = document.querySelector('.time-slots');
     const daysContainer = document.getElementById('days-container');
     const labFilter = document.getElementById('lab-filter');
-
-    // 1. Gerar coluna de horários
-    function renderTimeSlots() {
-        timeSlotsContainer.innerHTML = '';
-        for (let i = startHour; i <= endHour; i++) {
-            const timeLabel = document.createElement('div');
-            timeLabel.className = 'time-slot-label';
-            timeLabel.textContent = `${i.toString().padStart(2, '0')}:00`;
-            timeSlotsContainer.appendChild(timeLabel);
-        }
-    }
 
     // 2. Gerar colunas de dias e slots
     function renderDaysAndEvents(filterLab = 'all') {
@@ -95,34 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
                        (filterLab === 'all' || e.lab === filterLab);
             });
 
+            // 1. Sort events by start time
+            dayEvents.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+
             dayEvents.forEach(event => {
-                const evStartHour = event.startDate.getHours();
-                const evDuration = (event.endDate.getTime() - event.startDate.getTime()) / (1000 * 60 * 60);
-                
-                // Se o evento termina antes de startHour ou começa depois de endHour, ignora visualmente
-                if (evStartHour >= endHour || (evStartHour + evDuration) <= startHour) return;
-
-                const topOffset = (evStartHour - startHour) * slotHeight;
-                const height = evDuration * slotHeight;
-
                 const eventEl = document.createElement('div');
                 eventEl.className = `event ${event.lab}`;
-                eventEl.style.top = `${topOffset}px`;
-                eventEl.style.height = `${height}px`;
                 
-                const startTimeStr = `${evStartHour.toString().padStart(2, '0')}:00`;
-                const endTimeStr = `${(evStartHour + evDuration).toString().padStart(2, '0')}:00`;
-
-                const labNames = {
-                    'lab1': 'Lab. Info 1',
-                    'lab2': 'Lab. Info 2',
-                    'lab3': 'Lab. Química',
-                    'lab4': 'Lab. Física'
-                };
+                const startTimeStr = `${event.startDate.getHours().toString().padStart(2, '0')}:${event.startDate.getMinutes().toString().padStart(2, '0')}`;
+                const endTimeStr = `${event.endDate.getHours().toString().padStart(2, '0')}:${event.endDate.getMinutes().toString().padStart(2, '0')}`;
 
                 eventEl.innerHTML = `
                     <div class="event-title" title="${event.title}">${event.title}</div>
-                    <div class="event-time"><i class="fa-regular fa-clock"></i> ${startTimeStr} - ${endTimeStr} | ${labNames[event.lab]}</div>
+                    <div class="event-time"><i class="fa-regular fa-clock"></i> ${startTimeStr} - ${endTimeStr} | ${event.labName}</div>
                     <div class="event-prof"><i class="fa-solid fa-user-tie"></i> ${event.prof}</div>
                 `;
                 
@@ -133,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         prof: event.prof,
                         startTimeStr: startTimeStr,
                         endTimeStr: endTimeStr,
-                        labName: labNames[event.lab],
+                        labName: event.labName,
                         labId: event.labId,
                         rawStart: event.rawStart,
                         rawEnd: event.rawEnd
@@ -148,11 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
             daysContainer.appendChild(dayCol);
         });
     }
-
-    // Sincronizar scroll entre a coluna de horas e a grade de dias
-    daysContainer.addEventListener('scroll', () => {
-        timeSlotsContainer.scrollTop = daysContainer.scrollTop;
-    });
 
     // Event listener para o filtro
     labFilter.addEventListener('change', (e) => {
@@ -170,12 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDaysAndEvents(labFilter.value);
     });
 
-    // Inicializar
-    renderTimeSlots();
+
     renderDaysAndEvents();
     
-    // Set initial scroll to 08:00
-    daysContainer.scrollTop = 0;
+
     // Modal de Solicitação de Agendamento
     const btnRequestSchedule = document.getElementById('btn-request-schedule');
     const requestModal = document.getElementById('request-modal');
@@ -196,7 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let respText = '';
             if (labInfo.type === 'saude') {
                 respText = 'Técnica Saúde';
-            } else if (labInfo.type === 'informatica' || labInfo.type === 'engenharia') {
+            } else if (labInfo.type === 'informatica') {
+                respText = 'TI Responsável / Admin';
+            } else if (labInfo.type === 'engenharia') {
                 respText = 'Técnico Engenharia';
             } else {
                 respText = 'Não Atribuído';

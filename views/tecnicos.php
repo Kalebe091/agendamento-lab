@@ -50,6 +50,7 @@ require_once '../includes/sidebar.php';
                             $bg_color = '0D8ABC';
                             if ($tec['role'] === 'tech_saude') $bg_color = '10b981';
                             elseif ($tec['role'] === 'tech_eng') $bg_color = '8b5cf6';
+                            elseif ($tec['role'] === 'tech_info') $bg_color = '3b82f6';
                         ?>
                         <div class="request-card">
                             <div class="req-card-header">
@@ -99,8 +100,9 @@ require_once '../includes/sidebar.php';
                     <div class="form-group">
                         <label for="tech-area">Área de Atuação</label>
                         <select id="tech-area" name="role" class="form-control" required>
-                            <option value="saude">Saúde (Lab Química, Anatomia)</option>
-                            <option value="eng">Engenharia (Lab Informática 1 e 2)</option>
+                            <option value="saude">Saúde</option>
+                            <option value="eng">Engenharia</option>
+                            <option value="info">Informática (TI)</option>
                         </select>
                     </div>
                     <div class="modal-actions" style="margin-top: 1rem; display: flex; justify-content: flex-end; gap: 1rem;">
@@ -143,8 +145,10 @@ require_once '../includes/sidebar.php';
             const name = document.getElementById('tech-name').value;
             const username = document.getElementById('tech-username').value;
             const password = document.getElementById('tech-password').value;
-            const areaValue = document.getElementById('tech-area').value;
-            const role = areaValue === 'saude' ? 'tech_saude' : 'tech_eng';
+            let role = 'tech_eng';
+            if (areaValue === 'saude') role = 'tech_saude';
+            else if (areaValue === 'info') role = 'tech_info';
+            else role = 'tech_eng';
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -188,7 +192,8 @@ require_once '../includes/sidebar.php';
             
             let badgeStr = '';
             if (user.role === 'tech_saude') badgeStr = 'Técnico de Saúde';
-            else if (user.role === 'tech_eng') badgeStr = 'Técnico de Engenharia/TI';
+            else if (user.role === 'tech_eng') badgeStr = 'Técnico de Engenharia';
+            else if (user.role === 'tech_info') badgeStr = 'Técnico de Informática (TI)';
             else if (user.role === 'admin') badgeStr = 'Administrador do Sistema';
             document.getElementById('profile-role-badge').textContent = badgeStr;
 

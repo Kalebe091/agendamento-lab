@@ -10,11 +10,14 @@ $db = $database->getConnection();
 $laboratories = [];
 if ($db) {
     $query = "SELECT * FROM laboratories";
-    if ($current_user['role'] === 'tech_eng') {
-        $query .= " WHERE type IN ('informatica', 'engenharia')";
-    } else if ($current_user['role'] === 'tech_saude') {
-        $query .= " WHERE type = 'saude'";
-    }
+   if ($current_user['role'] === 'tech_eng') {
+    $query .= " WHERE type = 'engenharia'";
+} else if ($current_user['role'] === 'tech_info') {
+    $query .= " WHERE type = 'informatica'";
+} else if ($current_user['role'] === 'tech_saude') {
+    $query .= " WHERE type = 'saude'";
+}
+
     
     $stmt = $db->query($query);
     if ($stmt) {

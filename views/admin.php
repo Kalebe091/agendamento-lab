@@ -15,10 +15,13 @@ if ($db) {
               JOIN laboratories l ON s.lab_id = l.id";
               
     if ($current_user['role'] === 'tech_eng') {
-        $query .= " WHERE l.type IN ('informatica', 'engenharia')";
+        $query .= " WHERE type = 'engenharia'";
+    } else if ($current_user['role'] === 'tech_info') {
+        $query .= " WHERE type = 'informatica'";
     } else if ($current_user['role'] === 'tech_saude') {
-        $query .= " WHERE l.type = 'saude'";
+        $query .= " WHERE type = 'saude'";
     }
+
     
     $query .= " ORDER BY s.created_at DESC";
     $stmt = $db->query($query);

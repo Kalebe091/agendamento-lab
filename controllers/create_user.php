@@ -20,13 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if (empty($name) || empty($username) || empty($password) || !in_array($role, ['tech_saude', 'tech_eng'])) {
+    if (empty($name) || empty($username) || empty($password) || !in_array($role, ['tech_saude', 'tech_eng', 'tech_info'])) {
         echo json_encode(['success' => false, 'message' => 'Dados inválidos ou incompletos. Preencha nome, usuário, senha e função.']);
         exit;
     }
 
     // Define o título de acordo com a área
-    $title = $role === 'tech_saude' ? 'Responsável: Lab Química, Lab Anatomia' : 'Responsável: Lab Informática 1 e 2';
+    if ($role === 'tech_saude') {
+        $title = 'Responsável: Saúde';
+    } elseif ($role === 'tech_eng') {
+        $title = 'Responsável: Engenharia';
+    } else {
+        $title = 'Responsável: Informática (TI)';
+    }
     
     // Hash da senha definida pelo admin
     $password_hash = password_hash($password, PASSWORD_DEFAULT);

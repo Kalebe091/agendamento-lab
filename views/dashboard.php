@@ -23,8 +23,11 @@ if ($db) {
         $lab_filter_sql = "WHERE type = 'saude'";
         $schedules_filter_sql = "WHERE lab_id IN (SELECT id FROM laboratories WHERE type = 'saude')";
     } elseif ($role === 'tech_eng') {
-        $lab_filter_sql = "WHERE type IN ('engenharia', 'informatica')";
-        $schedules_filter_sql = "WHERE lab_id IN (SELECT id FROM laboratories WHERE type IN ('engenharia', 'informatica'))";
+        $lab_filter_sql = "WHERE type = 'engenharia'";
+        $schedules_filter_sql = "WHERE lab_id IN (SELECT id FROM laboratories WHERE type = 'engenharia')";
+    } elseif ($role === 'tech_info') {
+        $lab_filter_sql = "WHERE type = 'informatica'";
+        $schedules_filter_sql = "WHERE lab_id IN (SELECT id FROM laboratories WHERE type = 'informatica')";
     }
 
     // 1. Agendamentos
